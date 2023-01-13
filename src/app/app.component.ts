@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { fromEvent, interval, merge, switchMap } from 'rxjs';
+import {
+  fromEvent,
+  interval,
+  merge,
+  Observable,
+  Subscription,
+  switchMap,
+} from 'rxjs';
 
 import { ThemeService } from './theme.service';
 
@@ -18,6 +25,8 @@ export class AppComponent implements OnInit {
   darkTheme: FormControl;
   showCredits = false;
   displayError: boolean = false;
+  allEvents: Observable<number> | undefined;
+  myTimer: Subscription | undefined;
 
   constructor(
     private themeService: ThemeService,
@@ -49,7 +58,7 @@ export class AppComponent implements OnInit {
     const keyPress$ = fromEvent<KeyboardEvent>(document, 'keyup');
     const allEvents = merge(click$, keyPress$, mouseMove$);
 
-    const result = allEvents.pipe(
+    this.allEvents = allEvents.pipe(
       switchMap(() => {
         this.remainingTime = this.duration;
         this.timerAlmostUp = false;
@@ -57,7 +66,7 @@ export class AppComponent implements OnInit {
         return interval(1000);
       })
     );
-    result.subscribe((x) => {
+    this.myTimer = this.allEvents.subscribe((x) => {
       console.log(`X is ${x}`);
       if (x >= this.duration - 57) {
         this.playAudio();
@@ -86,8 +95,9 @@ export class AppComponent implements OnInit {
   timerToggle(): void {
     this.timerAlmostUp = !this.timerAlmostUp;
   }
-  showMenuToggle(): void {
+  restartTimer(): void {
     this.showMenu = !this.showMenu;
+    this.myTimer?.unsubscribe();
   }
   showCreditsToggle(): void {
     this.showCredits = !this.showCredits;
