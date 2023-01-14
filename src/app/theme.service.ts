@@ -29,10 +29,10 @@ export class ThemeService {
     this.setTheme(lightTheme);
   }
 
-  private setTheme(theme: {}) {
+  private setTheme(theme: any) {
     console.log('theme', theme);
-    // Object.keys(theme).forEach((k) =>
-    //   this.document.documentElement.style.setProperty(`--${k}`, theme[k])
-    // );
+    Object.keys(theme).forEach((k) =>
+      this.document.documentElement.style.setProperty(`--${k}`, theme[k])
+    );
   }
 }
