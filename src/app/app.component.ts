@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
     );
     this.myTimer = this.allEvents.subscribe((x) => {
       console.log(`X is ${x}`);
-      if (x >= this.duration - 57) {
+      if (x >= this.duration - 10) {
         this.playAudio();
         this.audioPlaying = true;
         this.timerAlmostUp = true;
