@@ -156,7 +156,7 @@ export class AppComponent implements OnInit {
     this.subscription && this.subscription.unsubscribe();
 
     this.subscription = result.subscribe((x) => {
-      if (x >= this.duration - 55) {
+      if (x >= this.duration - 10) {
         this.playAudio();
         this.audioPlaying = true;
         this.timerAlmostUp = true;
