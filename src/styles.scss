@@ -1,16 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
 
 :root {
-  --primary-color: #fff;
+  --text-primary: #a370f2;
+  --text-secondary: #d95fcc;
+  --text-tertiary: #4c0be3;
+  --card-bkd: #eee;
   --background-color: #e5e5e5;
   --text-color: #2d2d2d;
   --credits-background: #ddd;
-  --border-color: "#ccc";
+  --border-color: #bbb;
+  --shadow-color: #ccc;
 }
 
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: "Lato", sans-serif;
+  font-family: Lato, Helvetica, sans-serif;
   padding: 1rem;
 }

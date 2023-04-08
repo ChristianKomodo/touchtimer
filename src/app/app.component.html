@@ -1,30 +1,71 @@
-<h1>Sleep Timer Reminder</h1>
+<h1>Screen Activity Reminder</h1>
 <div *ngIf="showMenu; else timer" class="menu">
   <p>
-    Work on multiple computers and one goes to sleep while you're working? Get
-    notified right before your computer goes to sleep so you can keep it awake!
-    Maintain your "Available" status! Avoid the yellow "Away" dot!
+    Get notified right before your status goes
+    <span class="text-primary">inactive</span>! Take calls or get some coffee
+    and still show that you're <span class="text-primary">available</span> for
+    your coworkers.
   </p>
   <p>
-    Wiggling the mouse, clicking, or hitting a key will restart the timer and
-    keep your machine awake. No more stopping and starting, just touch the
-    touchpad occasionally!
-  </p>
-  <p>
-    <strong>Example:</strong> The default inactivity timer for Microsoft Teams
-    is 5 minutes, so type that in the box, and you will be notified at 4min50sec
-    to interact before Teams changes your status to "Away".
+    Unlike other timers, any interaction will restart it. Wiggling the mouse,
+    clicking, or pressing a key will restart the timer.
   </p>
 
   <hr />
 
-  <label for="duration"
-    >For how many minutes does your screen stay awake?</label
-  >
   <div class="duration-box">
-    <input type="text" #duration /> &nbsp; Minutes
+    <!-- Duration Selection -->
+    <label for="duration"
+      >For how many minutes does your screen stay awake?</label
+    >
+    <input type="text" #duration /> &nbsp;
+    <span class="text-primary">Minutes</span>
+
+    <!-- Audio Selection -->
+    <label for="audio"
+      >What sound would you like to hear when your timer is almost up?</label
+    >
+    <select
+      class="dropdown"
+      #audioDropdown
+      (change)="onSelectAudio(audioDropdown.value)"
+    >
+      <option *ngFor="let audio of audioSelections" [value]="audio.audioTitle">
+        {{ audio.audioTitle }}
+      </option>
+    </select>
+
+    <!-- Image Selection -->
+    <div shidden>
+      <br />
+      <legend>What image would you like to see as the visual alert?</legend>
+      <fieldset>
+        <div class="radios">
+          <div class="radio" *ngFor="let gif of gifSelections; let idx = index">
+            <input
+              type="radio"
+              id="gifChoice[idx]"
+              name="gifs"
+              [value]="gif.id"
+              [checked]="gifSelection.id == idx"
+              (change)="onSelectGif(idx)"
+            />
+            <label for="gifChoice{{ gif.id }}" class="text-secondary">{{
+              gif.gifTitle
+            }}</label>
+            <br />
+            <img
+              class="radio-img"
+              [src]="gif.gifPath"
+              [alt]="gif.gifTitle"
+              (click)="onSelectGif(idx)"
+            />
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
     <br />
-    <small *ngIf="displayError" class="error">Please enter only numbers.</small>
     <button
       type="button"
       class="timer-button"
@@ -43,23 +84,27 @@
       {{ remainingTime }} seconds left! Interact again to restart!
       <br />
       <br />
-      <img
-        src="https://media4.giphy.com/media/5bdgsd3ChyajOVN0rl/giphy.gif"
-        alt="Wake Up image"
-      />
+      <img [src]="gifSelection.gifPath" [alt]="gifSelection.gifTitle" />
     </p>
 
     <div *ngIf="!timerAlmostUp">
-      <p>
-        Interact with a key press, click, or mouse movement and don't let
-        {{ duration * 1000 | date : "m" }} pass...
-      </p>
+      <p>{{ duration * 1000 | date : "m" }} minute timer set and running.</p>
       <h2>Time remaining: {{ remainingTime * 1000 | date : "m:ss" }}</h2>
       <br />
+      <div class="bar-container">
+        <div class="bar" [style.width]="remainingPercent + '%'">
+          <div class="bar-value">{{ remainingPercent + "%" }}</div>
+        </div>
+      </div>
+      <br />
       <small
-        >You will be warned 10 seconds before the timer runs out so you can
-        interact and keep it awake.</small
+        >You will be warned 10 seconds before the timer runs out with a
+        <span class="text-primary">{{ audioSelection.audioTitle }}</span> audio
+        alert and a <span class="text-primary">big animated gif</span> image so
+        you can interact and remain "Available". Wiggling the mouse, clicking,
+        or pressing a key will restart the timer.</small
       >
+      <br />
       <br />
     </div>
   </div>
@@ -67,17 +112,18 @@
 
 <div class="two-column">
   <div>
-    <input type="checkbox" id="themeToggle" [formControl]="darkTheme" />
-    &nbsp;
-    <label for="themeToggle">Dark Mode</label>
+    <label for="themeToggle"
+      ><input type="checkbox" id="themeToggle" [formControl]="darkTheme" />
+      &nbsp;&nbsp; Dark Mode</label
+    >
   </div>
   <button
     *ngIf="!showMenu"
     type="button"
-    class="start-button"
-    (click)="restartTimer()"
+    class="timer-button"
+    (click)="showMenuToggle()"
   >
-    Stop/Restart Timer
+    Stop Timer
   </button>
 </div>
 
@@ -110,6 +156,14 @@
     Green button CSS from
     <a href="https://www.bestcssbuttongenerator.com/#/18" target="_blank"
       >this CSS Generator</a
+    >.
+  </p>
+  <p>
+    Vaporwave Color Swatches
+    <a
+      href="https://i.etsystatic.com/27701696/r/il/53f53d/4044572952/il_1588xN.4044572952_4z5v.jpg"
+      target="_blank"
+      >Here</a
     >.
   </p>
 </div>
