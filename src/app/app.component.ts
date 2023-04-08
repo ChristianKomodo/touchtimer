@@ -177,7 +177,7 @@ export class AppComponent implements OnInit {
       this.remainingPercent = Math.round(
         (this.remainingTime / this.duration) * 100
       );
-      console.log('remainingTime / duration * 100 is', this.remainingPercent);
+      // console.log('remainingTime / duration * 100 is', this.remainingPercent);
     });
   }
 
