@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   audioSelection!: AudioModel;
   gifSelections!: GifModel[];
   gifSelection!: GifModel;
-  error: string;
+  error!: string;
 
   constructor(
     private themeService: ThemeService,
