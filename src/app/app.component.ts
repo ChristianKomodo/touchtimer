@@ -81,31 +81,37 @@ export class AppComponent implements OnInit {
     this.gifSelections = [
       {
         id: 0,
-        gifTitle: 'Bunny Gong',
-        gifPath:
-          'https://gifdb.com/images/high/bunny-wake-up-gong-ywvit3j8auv8abgu.webp',
-      },
-      {
-        id: 1,
-        gifTitle: 'Vaporwave Mountain',
-        gifPath:
-          'https://gifdb.com/images/file/vaporwave-mountain-peak-moon-1yg3i0ccfu1bkli1.gif',
-      },
-      {
-        id: 2,
-        gifTitle: 'Vaporwave Dancer',
-        gifPath:
-          'https://gifdb.com/images/high/vaporwave-model-dancing-zzootpk2etvlmknu.webp',
-      },
-      {
-        id: 3,
         gifTitle: 'Vaporwave 80s',
         gifPath:
           'https://gifdb.com/images/high/vaporwave-80s-city-mxa15mtookmrjlyk.webp',
       },
       {
+        id: 1,
+        gifTitle: 'Vapor Flight 747',
+        gifPath:
+          'https://gifdb.com/images/high/vaporwave-aircraft-monitor-glitch-3rqtgaycdwwapz4i.webp',
+      },
+      {
+        id: 2,
+        gifTitle: 'Bunny Gong',
+        gifPath:
+          'https://gifdb.com/images/high/bunny-wake-up-gong-ywvit3j8auv8abgu.webp',
+      },
+      {
+        id: 3,
+        gifTitle: 'Vapor Mountain',
+        gifPath:
+          'https://gifdb.com/images/file/vaporwave-mountain-peak-moon-1yg3i0ccfu1bkli1.gif',
+      },
+      {
         id: 4,
-        gifTitle: 'Vaporwave Checker',
+        gifTitle: 'Vaporwave Dancer',
+        gifPath:
+          'https://gifdb.com/images/high/vaporwave-model-dancing-zzootpk2etvlmknu.webp',
+      },
+      {
+        id: 5,
+        gifTitle: 'Vapor Squares',
         gifPath:
           'https://gifdb.com/images/file/vaporwave-checkered-pyramid-yi9jnegowvbjsshz.gif',
       },
