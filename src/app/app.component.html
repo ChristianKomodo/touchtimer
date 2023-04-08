@@ -1,4 +1,10 @@
-<h1>Screen Activity Reminder</h1>
+<h1 class="glitch">
+  <span aria-hidden="true">{{ title }}</span>
+  {{ title }}
+  <span aria-hidden="true">{{ title }}</span>
+</h1>
+<h2 class="subheading text-primary">Screen Activity Reminder</h2>
+
 <div *ngIf="showMenu; else timer" class="menu">
   <p>
     Get notified right before your status goes
@@ -36,36 +42,36 @@
     </select>
 
     <!-- Image Selection -->
-    <div shidden>
-      <br />
-      <legend>What image would you like to see as the visual alert?</legend>
-      <fieldset>
-        <div class="radios">
-          <div class="radio" *ngFor="let gif of gifSelections; let idx = index">
-            <input
-              type="radio"
-              id="gifChoice[idx]"
-              name="gifs"
-              [value]="gif.id"
-              [checked]="gifSelection.id == idx"
-              (change)="onSelectGif(idx)"
-            />
-            <label for="gifChoice{{ gif.id }}" class="text-secondary">{{
-              gif.gifTitle
-            }}</label>
-            <br />
-            <img
-              class="radio-img"
-              [src]="gif.gifPath"
-              [alt]="gif.gifTitle"
-              (click)="onSelectGif(idx)"
-            />
-          </div>
-        </div>
-      </fieldset>
-    </div>
-
     <br />
+    <legend>What image would you like to see as the visual alert?</legend>
+    <fieldset>
+      <div class="radios">
+        <div class="radio" *ngFor="let gif of gifSelections; let idx = index">
+          <input
+            type="radio"
+            id="gifChoice[idx]"
+            name="gifs"
+            [value]="gif.id"
+            [checked]="gifSelection.id == idx"
+            (change)="onSelectGif(idx)"
+          />
+          <label for="gifChoice{{ gif.id }}" class="text-secondary">{{
+            gif.gifTitle
+          }}</label>
+          <br />
+          <img
+            class="radio-img"
+            [src]="gif.gifPath"
+            [alt]="gif.gifTitle"
+            (click)="onSelectGif(idx)"
+          />
+        </div>
+      </div>
+    </fieldset>
+
+    <small class="error" *ngIf="error">Only use numbers for "minutes"!</small>
+    <br />
+
     <button
       type="button"
       class="timer-button"
@@ -164,6 +170,12 @@
       href="https://www.etsy.com/listing/1025870411/vaporwave-color-swatches-color-palette"
       target="_blank"
       >Color Swatches</a
+    >.
+  </p>
+  <p>
+    Glitch title effect from
+    <a href="https://codepen.io/cbanlawi/pen/xxRBeMY" target="_blank"
+      >this Codepen</a
     >.
   </p>
 </div>

@@ -21,6 +21,7 @@ export interface GifModel {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  title!: string;
   subscription!: Subscription;
   showMenu = true;
   timerAlmostUp!: boolean;
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
   audioSelection!: AudioModel;
   gifSelections!: GifModel[];
   gifSelection!: GifModel;
+  error: string;
 
   constructor(
     private themeService: ThemeService,
@@ -47,6 +49,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.title = 'TouchTimer.net';
     this.prepareAudio();
     this.prepareGif();
   }
@@ -142,6 +145,11 @@ export class AppComponent implements OnInit {
   }
 
   startTimer(duration: string) {
+    this.error = '';
+    if (isNaN(Number(duration))) {
+      this.error = 'Only use numbers for "minutes"!';
+      return;
+    }
     this.showMenu = false;
     this.duration = parseInt(duration) * 60;
     const click$ = fromEvent<MouseEvent>(document, 'click');
@@ -177,7 +185,7 @@ export class AppComponent implements OnInit {
       this.remainingPercent = Math.round(
         (this.remainingTime / this.duration) * 100
       );
-      // console.log('remainingTime / duration * 100 is', this.remainingPercent);
+      console.log('remainingTime / duration * 100 is', this.remainingPercent);
     });
   }
 
