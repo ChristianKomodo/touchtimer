@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   showCredits = false;
   audioSelections: AudioModel[] = [];
   audioSelection!: AudioModel;
+  audio: HTMLAudioElement = new Audio();
   gifSelections!: GifModel[];
   gifSelection!: GifModel;
   error!: string;
@@ -77,6 +78,8 @@ export class AppComponent implements OnInit {
     ];
     // Use the first option as the default
     this.audioSelection = this.audioSelections[0];
+    // Instantiate the audio object
+    this.audio = new Audio(this.audioSelection.audioPath);
   }
 
   prepareGif(): void {
@@ -129,16 +132,27 @@ export class AppComponent implements OnInit {
     );
     if (audioSelection) {
       this.audioSelection = audioSelection;
+      this.audio.load();
+    } else {
+      console.log('onSelectAudio() Error: audioSelection not found');
     }
   }
 
+  stopAudio(): void {
+    console.log('stopAudio()');
+    this.audio.pause();
+    this.audio.currentTime = 0;
+    this.audioPlaying = false;
+  }
+
   playAudio(): void {
-    if (this.audioPlaying) {
-      return;
+    console.log('playAudio()');
+    if (!this.audioPlaying) {
+      this.audio.play();
+      this.audioPlaying = true;
+    } else {
+      console.log('playAudio() Error: audio already playing');
     }
-    const audio = new Audio(this.audioSelection.audioPath);
-    audio.load();
-    audio.play();
   }
 
   onSelectGif(gifIdx: number): void {
@@ -147,7 +161,7 @@ export class AppComponent implements OnInit {
 
   startTimer(duration: string) {
     this.error = '';
-    if (isNaN(Number(duration))) {
+    if (!duration || duration == '' || isNaN(Number(duration))) {
       this.error = 'Only use numbers for "minutes"!';
       return;
     }
@@ -156,44 +170,40 @@ export class AppComponent implements OnInit {
     const click$ = fromEvent<MouseEvent>(document, 'click');
     const mouseMove$ = fromEvent<MouseEvent>(document, 'mousemove');
     const keyPress$ = fromEvent<KeyboardEvent>(document, 'keyup');
-    const allEvents = merge(click$, keyPress$, mouseMove$);
+    const allEvents$ = merge(click$, keyPress$, mouseMove$);
 
-    const result = allEvents.pipe(
+    const result = allEvents$.pipe(
+      // When any event happens:
       switchMap(() => {
         this.remainingPercent = 100;
         this.remainingTime = this.duration;
         this.timerAlmostUp = false;
         // tick every 1s
-        return interval(1000);
+        return interval(1000); // intervalTick
       })
     );
 
+    // Clear out any previous subscription each time you start/restart
     this.subscription && this.subscription.unsubscribe();
 
-    this.subscription = result.subscribe((x) => {
-      if (x >= this.duration - 10) {
+    this.subscription = result.subscribe((intervalTick) => {
+      if (intervalTick == this.duration - 10) {
+        // Almost up warning
         this.playAudio();
-        this.audioPlaying = true;
         this.timerAlmostUp = true;
-      } else {
-        this.audioPlaying = false;
       }
       if (this.remainingTime >= 0) {
         this.remainingTime -= 1;
+        this.remainingPercent = Math.round(
+          (this.remainingTime / this.duration) * 100
+        );
       } else {
         this.remainingPercent = 100;
       }
-      this.remainingPercent = Math.round(
-        (this.remainingTime / this.duration) * 100
-      );
-      // console.log('remainingTime / duration * 100 is', this.remainingPercent);
     });
   }
 
-  timerToggle(): void {
-    this.timerAlmostUp = !this.timerAlmostUp;
-  }
-  showMenuToggle(): void {
+  stopTimer(): void {
     this.subscription.unsubscribe();
     this.showMenu = !this.showMenu;
   }
