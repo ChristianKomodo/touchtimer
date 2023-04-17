@@ -24,7 +24,13 @@
     <label for="duration"
       >For how many minutes does your screen stay awake?</label
     >
-    <input type="text" #duration /> &nbsp;
+    <input
+      #duration
+      class="duration"
+      type="text"
+      (keyup)="onDurationChange($event)"
+    />
+    &nbsp;
     <span class="text-primary">Minutes</span>
 
     <!-- Audio Selection -->

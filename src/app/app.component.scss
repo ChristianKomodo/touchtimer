@@ -31,12 +31,18 @@ label {
 input {
   margin: 0.5rem 0;
 }
+input.duration {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #666;
+  width: 20px;
+}
 
 .dropdown {
   background-color: #fff;
   border: 1px solid #666;
   padding: 6px;
-  margin: 0.5rem 0 1rem;
+  margin: 0.5rem 0 1.75rem;
   color: var(--text-tertiary);
   border-radius: 5px;
   box-shadow: 4px 4px #ccc;

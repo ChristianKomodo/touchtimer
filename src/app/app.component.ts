@@ -55,6 +55,10 @@ export class AppComponent implements OnInit {
     this.prepareGif();
   }
 
+  onDurationChange(event: any) {
+    console.log('duration event is', event.target.value);
+  }
+
   prepareAudio(): void {
     // Name and audio source for any sounds you want to play for the alert
     this.audioSelections = [
@@ -188,11 +192,11 @@ export class AppComponent implements OnInit {
 
     this.subscription = result.subscribe((intervalTick) => {
       if (intervalTick == this.duration - 10) {
-        // Almost up warning
+        // Timer is almost up at 10 seconds before duration
         this.playAudio();
         this.timerAlmostUp = true;
       }
-      if (this.remainingTime >= 0) {
+      if (this.remainingTime > 0) {
         this.remainingTime -= 1;
         this.remainingPercent = Math.round(
           (this.remainingTime / this.duration) * 100
@@ -205,11 +209,9 @@ export class AppComponent implements OnInit {
 
   stopTimer(): void {
     this.subscription.unsubscribe();
-    this.showMenu = !this.showMenu;
+    this.showMenu = true;
   }
   showCreditsToggle(): void {
     this.showCredits = !this.showCredits;
   }
 }
-
-// https://forums.eveonline.com/t/hacs-for-level-4-missions/346610/7
