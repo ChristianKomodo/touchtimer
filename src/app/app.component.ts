@@ -55,13 +55,13 @@ export class AppComponent implements OnInit {
     this.prepareGif();
   }
 
-  onDurationChange(event: any) {
-    console.log('duration event is', event.target.value);
-  }
-
   prepareAudio(): void {
     // Name and audio source for any sounds you want to play for the alert
     this.audioSelections = [
+      {
+        audioTitle: 'No Audio (Silent)',
+        audioPath: '',
+      },
       {
         audioTitle: 'Birds Chirping',
         audioPath: 'https://freewavesamples.com/files/Chirping-Birds-2.wav',
@@ -74,10 +74,6 @@ export class AppComponent implements OnInit {
         audioTitle: 'Cheesy Bass Rhythm',
         audioPath:
           'https://freewavesamples.com/files/Ensoniq-ZR-76-01-Dope-77.wav',
-      },
-      {
-        audioTitle: 'No Audio (Silent)',
-        audioPath: '',
       },
     ];
     // Use the first option as the default
@@ -131,31 +127,33 @@ export class AppComponent implements OnInit {
   }
 
   onSelectAudio(value: string): void {
+    this.stopAudio();
     const audioSelection = this.audioSelections.find(
       (a: { audioTitle: string }) => a.audioTitle == value
     );
     if (audioSelection) {
       this.audioSelection = audioSelection;
-      this.audio.load();
+      this.playAudio();
     } else {
       console.log('onSelectAudio() Error: audioSelection not found');
     }
   }
 
   stopAudio(): void {
-    console.log('stopAudio()');
     this.audio.pause();
     this.audio.currentTime = 0;
     this.audioPlaying = false;
   }
 
   playAudio(): void {
-    console.log('playAudio()');
-    if (!this.audioPlaying) {
+    if (!this.audioPlaying && this.audioSelection.audioPath != '') {
+      this.audio = new Audio(this.audioSelection.audioPath);
       this.audio.play();
       this.audioPlaying = true;
     } else {
-      console.log('playAudio() Error: audio already playing');
+      console.log(
+        'playAudio() Error: audio already playing or audio path is empty.'
+      );
     }
   }
 
@@ -164,6 +162,7 @@ export class AppComponent implements OnInit {
   }
 
   startTimer(duration: string) {
+    this.stopAudio();
     this.error = '';
     if (!duration || duration == '' || isNaN(Number(duration))) {
       this.error = 'Only use numbers for "minutes"!';
@@ -182,6 +181,7 @@ export class AppComponent implements OnInit {
         this.remainingPercent = 100;
         this.remainingTime = this.duration;
         this.timerAlmostUp = false;
+        this.stopAudio();
         // tick every 1s
         return interval(1000); // intervalTick
       })
@@ -191,7 +191,7 @@ export class AppComponent implements OnInit {
     this.subscription && this.subscription.unsubscribe();
 
     this.subscription = result.subscribe((intervalTick) => {
-      if (intervalTick == this.duration - 10) {
+      if (intervalTick == this.duration - 11) {
         // Timer is almost up at 10 seconds before duration
         this.playAudio();
         this.timerAlmostUp = true;
@@ -208,9 +208,11 @@ export class AppComponent implements OnInit {
   }
 
   stopTimer(): void {
+    this.stopAudio();
     this.subscription.unsubscribe();
     this.showMenu = true;
   }
+
   showCreditsToggle(): void {
     this.showCredits = !this.showCredits;
   }
