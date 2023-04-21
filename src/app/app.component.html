@@ -24,7 +24,8 @@
     <label for="duration"
       >For how many minutes does your screen stay awake?</label
     >
-    <input type="text" #duration /> &nbsp;
+    <input #duration class="duration" type="text" />
+    &nbsp;
     <span class="text-primary">Minutes</span>
 
     <!-- Audio Selection -->
@@ -127,7 +128,7 @@
     *ngIf="!showMenu"
     type="button"
     class="timer-button"
-    (click)="showMenuToggle()"
+    (click)="stopTimer()"
   >
     Stop Timer
   </button>

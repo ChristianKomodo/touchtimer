@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   showCredits = false;
   audioSelections: AudioModel[] = [];
   audioSelection!: AudioModel;
+  audio: HTMLAudioElement = new Audio();
   gifSelections!: GifModel[];
   gifSelection!: GifModel;
   error!: string;
@@ -58,25 +59,26 @@ export class AppComponent implements OnInit {
     // Name and audio source for any sounds you want to play for the alert
     this.audioSelections = [
       {
+        audioTitle: 'No Audio (Silent)',
+        audioPath: '',
+      },
+      {
         audioTitle: 'Birds Chirping',
         audioPath: 'https://freewavesamples.com/files/Chirping-Birds-2.wav',
+      },
+      {
+        audioTitle: 'Vaporwave Music',
+        audioPath: '/assets/audio/23220143_vaporwave_by_bransboynd_preview.mp3',
       },
       {
         audioTitle: 'Drum Beat',
         audioPath: 'https://freewavesamples.com/files/Casio-MT-45-16-Beat.wav',
       },
-      {
-        audioTitle: 'Cheesy Bass Rhythm',
-        audioPath:
-          'https://freewavesamples.com/files/Ensoniq-ZR-76-01-Dope-77.wav',
-      },
-      {
-        audioTitle: 'No Audio (Silent)',
-        audioPath: '',
-      },
     ];
     // Use the first option as the default
     this.audioSelection = this.audioSelections[0];
+    // Instantiate the audio object
+    this.audio = new Audio(this.audioSelection.audioPath);
   }
 
   prepareGif(): void {
@@ -124,21 +126,34 @@ export class AppComponent implements OnInit {
   }
 
   onSelectAudio(value: string): void {
+    this.stopAudio();
     const audioSelection = this.audioSelections.find(
       (a: { audioTitle: string }) => a.audioTitle == value
     );
     if (audioSelection) {
       this.audioSelection = audioSelection;
+      this.playAudio();
+    } else {
+      console.log('onSelectAudio() Error: audioSelection not found');
     }
   }
 
+  stopAudio(): void {
+    this.audio.pause();
+    this.audio.currentTime = 0;
+    this.audioPlaying = false;
+  }
+
   playAudio(): void {
-    if (this.audioPlaying) {
-      return;
+    if (!this.audioPlaying && this.audioSelection.audioPath != '') {
+      this.audio = new Audio(this.audioSelection.audioPath);
+      this.audio.play();
+      this.audioPlaying = true;
+    } else {
+      console.log(
+        'playAudio() Error: audio already playing or audio path is empty.'
+      );
     }
-    const audio = new Audio(this.audioSelection.audioPath);
-    audio.load();
-    audio.play();
   }
 
   onSelectGif(gifIdx: number): void {
@@ -146,8 +161,9 @@ export class AppComponent implements OnInit {
   }
 
   startTimer(duration: string) {
+    this.stopAudio();
     this.error = '';
-    if (isNaN(Number(duration))) {
+    if (!duration || duration == '' || isNaN(Number(duration))) {
       this.error = 'Only use numbers for "minutes"!';
       return;
     }
@@ -156,50 +172,47 @@ export class AppComponent implements OnInit {
     const click$ = fromEvent<MouseEvent>(document, 'click');
     const mouseMove$ = fromEvent<MouseEvent>(document, 'mousemove');
     const keyPress$ = fromEvent<KeyboardEvent>(document, 'keyup');
-    const allEvents = merge(click$, keyPress$, mouseMove$);
+    const allEvents$ = merge(click$, keyPress$, mouseMove$);
 
-    const result = allEvents.pipe(
+    const result = allEvents$.pipe(
+      // When any event happens:
       switchMap(() => {
         this.remainingPercent = 100;
         this.remainingTime = this.duration;
         this.timerAlmostUp = false;
+        this.stopAudio();
         // tick every 1s
-        return interval(1000);
+        return interval(1000); // intervalTick
       })
     );
 
+    // Clear out any previous subscription each time you start/restart
     this.subscription && this.subscription.unsubscribe();
 
-    this.subscription = result.subscribe((x) => {
-      if (x >= this.duration - 10) {
+    this.subscription = result.subscribe((intervalTick) => {
+      if (intervalTick == this.duration - 11) {
+        // Timer is almost up at 10 seconds before duration
         this.playAudio();
-        this.audioPlaying = true;
         this.timerAlmostUp = true;
-      } else {
-        this.audioPlaying = false;
       }
-      if (this.remainingTime >= 0) {
+      if (this.remainingTime > 0) {
         this.remainingTime -= 1;
+        this.remainingPercent = Math.round(
+          (this.remainingTime / this.duration) * 100
+        );
       } else {
         this.remainingPercent = 100;
       }
-      this.remainingPercent = Math.round(
-        (this.remainingTime / this.duration) * 100
-      );
-      // console.log('remainingTime / duration * 100 is', this.remainingPercent);
     });
   }
 
-  timerToggle(): void {
-    this.timerAlmostUp = !this.timerAlmostUp;
-  }
-  showMenuToggle(): void {
+  stopTimer(): void {
+    this.stopAudio();
     this.subscription.unsubscribe();
-    this.showMenu = !this.showMenu;
+    this.showMenu = true;
   }
+
   showCreditsToggle(): void {
     this.showCredits = !this.showCredits;
   }
 }
-
-// https://forums.eveonline.com/t/hacs-for-level-4-missions/346610/7
