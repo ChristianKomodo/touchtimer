@@ -67,13 +67,12 @@ export class AppComponent implements OnInit {
         audioPath: 'https://freewavesamples.com/files/Chirping-Birds-2.wav',
       },
       {
-        audioTitle: 'Drum Beat',
-        audioPath: 'https://freewavesamples.com/files/Casio-MT-45-16-Beat.wav',
+        audioTitle: 'Vaporwave Music',
+        audioPath: '/assets/audio/23220143_vaporwave_by_bransboynd_preview.mp3',
       },
       {
-        audioTitle: 'Cheesy Bass Rhythm',
-        audioPath:
-          'https://freewavesamples.com/files/Ensoniq-ZR-76-01-Dope-77.wav',
+        audioTitle: 'Drum Beat',
+        audioPath: 'https://freewavesamples.com/files/Casio-MT-45-16-Beat.wav',
       },
     ];
     // Use the first option as the default
