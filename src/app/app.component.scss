@@ -1,3 +1,23 @@
+:host {
+  display: block;
+  padding: 2rem;
+  border: 1px solid blue;
+  background-color: green;
+  box-sizing: border-box;
+  width: calc(100% - 50px);
+  height: 100%;
+}
+
+.side-progress-bar {
+  width: 50px;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 1px solid teal;
+  background-color: turquoise;
+}
+
 p {
   font-family: Lato, Arial, Helvetica, sans-serif;
 }
